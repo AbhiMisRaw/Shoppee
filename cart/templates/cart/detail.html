@@ -29,9 +29,19 @@ Your Shopping cart
                     </a>
                 </td>
                 <td>{{ product.name }}</td>
-                <td>{{ item.quantity }}</td>
                 <td>
-                    
+                    <form action="{% url 'cart:cart_add' product.id %}" method="post" >
+                        {{ item.update_quantity_form.quantity }}
+                        {{ item.update_quantity_form.override }}
+                        {% csrf_token %}
+                        <input type="submit" value="Update">
+                    </form>
+                </td>
+                <td>
+                    <form action="{% url "cart:cart_remove" product.id %}" method="post">
+                        <input type="submit" value="Remove">
+                        {% csrf_token %}
+                      </form>
                   </td>
                 <td class="num"> INR. {{item.price}} </td>
                 <td class="num"> INR. {{item.total_price}} </td>
@@ -47,6 +57,6 @@ Your Shopping cart
     
 </table>
 <p class="text-right">
-    <a href="{% url 'shop:product_list' %}" class="button">Checkout</a>
+    <a href="{% url 'orders:order_create' %}" class="button">Checkout</a>
 </p>
 {% endblock %}
