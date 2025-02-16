@@ -1,0 +1,57 @@
+{% extends "shop/base.html" %}
+{% load static %}
+
+{% block title %}
+Pay your order
+{% endblock %}
+
+{% block content %}
+
+<h1>Order Summary</h1>
+<table>
+    <thead>
+        <tr>
+            <th>Image</th>
+            <th>Product</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in order.items.all %}
+            <tr class="row{% cycle '1' '2' %}">
+                <td><img width="150px" height="150px" src="{% if item.product.image %}
+                            {{ item.product.image.url }}
+                        {% else %}
+                            {% static 'img/no_image.png' %}
+                        {% endif %}" >
+                </td>
+                <td>{{ item.product.name }}</td>
+                <td class="num">INR. {{item.price}}</td>
+                <td class="num">{{ item.quantity }}</td>
+                <td class="num">INR. {{ item.get_cost }}</td>
+
+            </tr>
+        {% endfor %}
+        <tr class="total">
+            <td colspan="4"> Total</td>
+            <td class="num">
+                INR. {{ order.get_total_cost }}
+            </td>
+        </tr>
+        <tr >
+            <td colspan="4"></td>
+            <td class="num">
+                <form  action="{% url 'payment:process' %}" method="post">
+                    <input style="padding-block: 20px;" type="submit" value="Pay Now">
+                    {% csrf_token %}
+                </form>
+            </td>
+        </tr>
+        
+    </tbody>
+</table><br>
+
+
+{% endblock %}
